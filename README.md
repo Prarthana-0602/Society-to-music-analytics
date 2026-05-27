@@ -1,325 +1,228 @@
-<div align="center">
+<p align="center">
+  <h1 align="center">🎵 Society-to-Music Analytics</h1>
+  <h3 align="center">
+    Understanding How Global News Sentiment Shapes Music Listening Behavior
+  </h3>
+</p>
 
-# 🌍 Society to Music Analytics
-### *Understanding How Global News Sentiment Shapes Music Listening Behavior*
+<p align="center">
+  End-to-end analytics platform exploring how global news sentiment influences music consumption patterns across countries and time.
+</p>
 
-<img src="images/architecture_diagram.png" width="85%"/>
+<p align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge)
+![PySpark](https://img.shields.io/badge/PySpark-Big%20Data-orange?style=for-the-badge)
+![Snowflake](https://img.shields.io/badge/Snowflake-Cloud%20Warehouse-blue?style=for-the-badge)
+![GCP](https://img.shields.io/badge/GCP-Cloud%20Platform-green?style=for-the-badge)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?style=for-the-badge)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-Automated-red?style=for-the-badge)
 
-### Cloud-Scale Analytics Pipeline  
-**Spotify · GDELT · PySpark · Snowflake · GCP · React**
+</p>
 
-</div>
+# 🌍 Project Overview
 
----
+This project investigates the relationship between global news sentiment and music listening behavior using large-scale distributed data pipelines and cloud infrastructure.
 
-# 🎯 Project Vision
+By integrating worldwide news sentiment signals with Spotify streaming and audio feature datasets, this platform uncovers how emotional patterns in global events may influence listener behavior across countries and time.
 
-Music is deeply connected to emotion, behavior, and social context.
+The platform was designed as a scalable cloud-native analytics system capable of processing high-volume datasets using PySpark, GCP, Snowflake, and modern CI/CD automation workflows.
 
-This project explores whether large-scale global events and changes in public sentiment are reflected in how people listen to music across countries and time.
+# ✨ Key Features
 
-Using Spotify streaming behavior, Spotify audio features, and GDELT global news sentiment data, our team built a scalable cloud-based analytics pipeline to study the relationship between news sentiment and consumer listening behavior between 2017–2021.
+✅ Distributed ETL pipelines with PySpark  
+✅ Automated cloud workflows using GCP  
+✅ Snowflake-powered analytics warehouse  
+✅ CI/CD deployment automation using GitHub Actions  
+✅ FastAPI backend architecture  
+✅ React-based frontend integration  
+✅ Large-scale sentiment and audio feature processing  
+✅ Automated cloud execution and orchestration  
 
-The project combines:
+# 🧠 Core Analytics Questions
 
-- distributed data engineering
-- cloud infrastructure
-- ETL pipeline orchestration
-- sentiment aggregation
-- statistical analysis
-- and visualization-driven storytelling
+- How does global news sentiment influence music mood and listening behavior?
+- Do countries react differently to emotional news events?
+- Can shifts in sentiment predict changes in audio feature trends?
+- How do emotional categories like joy, anger, fear, and sadness correlate with streaming behavior?
 
----
+# 🏗️ Platform Architecture
 
-# 🧠 Core Question
+<p align="center">
+  <img src="assets/Architecture_overview.png" width="1000">
+</p>
 
-<div align="center">
+# ⚡ CI/CD Automation
 
-## *Can global news sentiment influence music listening behavior?*
+<p align="center">
+  <img src="assets/CICD_Automation.png" width="1000">
+</p>
 
-</div>
+# 🔄 Infrastructure Formation Workflow
 
-We specifically explored whether changes in news tone were associated with shifts in:
+<p align="center">
+  <img src="assets/CICD_Formation.png" width="1000">
+</p>
 
-- music mood
-- emotional listening patterns
-- streaming behavior
-- and country-level listening trends
+# 🚀 CI/CD Workflow Execution
 
----
+<p align="center">
+  <img src="assets/CICD_Workflow.png" width="1000">
+</p>
 
-# 📊 Data Sources
+# 📊 Data Pipeline Execution
 
-| Dataset | Purpose |
+<p align="center">
+  <img src="assets/pipeline.png" width="1000">
+</p>
+
+# 🛠️ Tech Stack
+
+| Category | Technologies |
 |---|---|
-| 🎵 Spotify Daily Charts | Country-level streaming behavior |
-| 🎧 Spotify Audio Features | Emotional and audio characteristics |
-| 📰 GDELT News Sentiment | Global news tone and sentiment indicators |
-
-The analysis focused on multiple English-speaking countries and major world events including:
-- COVID-19
-- Brexit
-- elections
-- geopolitical events
-- economic disruptions
-
----
-
-# ⚙️ Technical Stack
-
-<div align="center">
-
-| Area | Technologies |
-|---|---|
-| Programming | Python · SQL |
-| Big Data | PySpark |
-| Orchestration | Kedro |
-| Cloud Infrastructure | Google Cloud Platform |
-| Distributed Compute | Dataproc |
-| Storage | Google Cloud Storage |
+| Programming | Python, SQL |
+| Distributed Processing | PySpark |
+| Cloud Platform | Google Cloud Platform (GCP) |
 | Data Warehouse | Snowflake |
-| Local Analytics | DuckDB |
-| CI/CD | GitHub Actions |
-| Backend | FastAPI |
+| Backend API | FastAPI |
 | Frontend | React + Vite |
-| Containerization | Docker |
-
-</div>
-
----
-
-# 🏗️ Architecture Overview
-
-<div align="center">
-
-<img src="images/pipeline_flow.png" width="95%"/>
-
-</div>
-
-The project was designed as a scalable cloud-based analytics workflow capable of processing large multi-source datasets across countries and time periods.
-
----
-
-# 🔄 End-to-End ETL Workflow
-
-## 📥 Extract
-
-The pipeline ingests:
-
-- Spotify streaming chart data
-- Spotify audio feature datasets
-- GDELT global sentiment datasets
-
-across multiple years and geographic regions.
-
----
-
-## 🔧 Transform
-
-The transformation layer performs:
-
-- schema standardization
-- missing value handling
-- duplicate removal
-- country/date alignment
-- sentiment aggregation
-- feature engineering
-- stream-weighted emotional scoring
-
-Key engineered indicators included:
-- valence
-- energy
-- joy
-- anger
-- sadness
-- fear
-- acousticness
-- danceability
-
----
-
-## 📤 Load
-
-Curated outputs were loaded into analytical tables used for:
-- dashboarding
-- trend analysis
-- correlation analysis
-- lag analysis
-- country-level comparisons
-
----
-
-# ☁️ Cloud Workflow & CI/CD
-
-<div align="center">
-
-<img src="images/cicd_flow.png" width="90%"/>
-
-</div>
-
-The project used a production-style workflow integrating:
-
-- GitHub Actions
-- Docker
-- Google Cloud Workflows
-- Dataproc
-- Snowflake
-
-The automation pipeline supported:
-- Docker builds
-- artifact deployment
-- automated Spark execution
-- cloud orchestration
-- Snowflake updates
-- logging and cleanup
-
----
-
-# 📈 Dashboard & Visualization
-
-<div align="center">
-
-<img src="images/dashboard_screenshot.png" width="92%"/>
-
-</div>
-
-The dashboard was built to explore:
-
-- global sentiment trends
-- emotional listening behavior
-- lagged response patterns
-- country-level comparisons
-- streaming trend changes over time
-
-The goal was to transform large-scale analytical outputs into interpretable behavioral insights.
-
----
-
-# 🔍 Key Findings
-
-<div align="center">
-
-| Finding | Result |
-|---|---|
-| Correlation between sentiment and music mood | ~0.37 |
-| Strongest behavioral response window | ~24 hours |
-| Countries analyzed | Multiple English-speaking markets |
-| Data coverage | 2017–2021 |
-
-</div>
-
-Additional findings included:
-- measurable behavioral response patterns following major world events
-- emotional audio shifts during periods of negative sentiment
-- lag-based relationships between public sentiment and listening behavior
-
----
-
-# 👩🏻‍💻 My Contributions
-
-This was a collaborative team project, and my work focused primarily on cloud setup, pipeline support, data integration, and workflow validation.
-
----
-
-## ☁️ Google Cloud Platform Setup
-
-I led the initial Google Cloud setup for the project, including:
-
-- configuring the GCP project environment
-- setting up Google Cloud Storage buckets
-- enabling required APIs and services
-- helping manage teammate access permissions
-- coordinating Dataproc-related access setup
-
----
-
-## ⚙️ Pipeline & Data Engineering Support
-
-I contributed to ETL workflow development by:
-
-- working with PySpark and Kedro pipelines
-- supporting data cleaning and transformation workflows
-- validating multi-source dataset consistency
-- helping structure country/date joins
-- testing local and cloud-based pipeline execution
-
----
-
-## 🔗 Data Integration & Validation
-
-I helped support integration across:
-- Spotify charts
-- Spotify audio feature datasets
-- GDELT news sentiment outputs
-
-This included:
-- validating transformed outputs
-- checking schema consistency
-- aligning datasets by country and date
-- ensuring final analytical tables were analysis-ready
-
----
-
-## 🚀 Cloud Workflow Exposure
-
-I also worked on understanding and supporting:
-- Dataproc distributed processing
-- Snowflake integration
-- CI/CD workflow structure
-- GitHub Actions automation
-- production pipeline execution
-
----
-
-## 📊 Analytics & Dashboard Support
-
-I contributed to:
-- interpreting transformed outputs
-- validating downstream analytical tables
-- connecting curated datasets to dashboard requirements
-- supporting visualization-driven insight generation
-
----
-
-# 🧩 What This Project Demonstrates
-
-This project strengthened my experience in:
-
-✅ cloud analytics workflows  
-✅ distributed data processing  
-✅ ETL pipeline orchestration  
-✅ multi-source data integration  
-✅ analytics engineering  
-✅ dashboard-driven storytelling  
-✅ statistical and behavioral analysis  
-✅ collaborative GitHub workflows  
-
----
-
-# 📁 Repository Structure
+| Orchestration | Kedro |
+| CI/CD | GitHub Actions |
+| Storage | Google Cloud Storage |
+| Infrastructure | Cloud Workflows, Dataproc |
+| Local Development | DuckDB |
+
+# ⚙️ Pipeline Workflow
+
+### Data Sources
+- GDELT Global News Dataset
+- Spotify Charts Dataset
+- Spotify Audio Features Dataset
+
+### Processing Flow
+1. Raw data ingestion
+2. Data cleaning and validation
+3. Sentiment aggregation
+4. Audio feature engineering
+5. Country-level joins and aggregations
+6. Warehouse loading
+7. API integration
+8. Frontend visualization
+
+# ☁️ Cloud Architecture
+
+The platform supports both:
+- Local execution using DuckDB
+- Production cloud execution using GCP + Snowflake
+
+Production workflows include:
+- Automated image builds
+- Cloud workflow deployment
+- Artifact uploads
+- Scheduled pipeline execution
+- Secret Manager integration
+- CI/CD orchestration
+
+# 📈 Production Features
+
+✅ Automated GitHub Actions deployment  
+✅ Cloud Run integration  
+✅ Secret Manager credential handling  
+✅ Dataproc distributed execution  
+✅ Scheduled workflow automation  
+✅ Containerized infrastructure  
+
+# 🧩 Repository Structure
 
 ```bash
-society-to-music-analytics/
-│
-├── README.md
-│
-├── images/
-│   ├── architecture_diagram.png
-│   ├── pipeline_flow.png
-│   ├── cicd_flow.png
-│   └── dashboard_screenshot.png
-│
-├── docs/
-│   ├── project_summary.md
-│   ├── my_contributions.md
-│   └── etl_pipeline_overview.md
-│
-├── notebooks/
-│   └── analysis_sample.ipynb
-│
-└── src/
-    ├── data_cleaning.py
-    ├── feature_engineering.py
-    └── analysis.py
+src/
+ ├── pipelines/
+ ├── process/
+ ├── curate/
+ ├── hooks.py
+ ├── settings.py
+
+conf/
+ ├── base/
+ ├── local/
+
+scripts/
+ ├── dataproc_init.sh
+ ├── dataproc_run.py
+
+infra/
+ ├── pipeline_workflow.yaml
+
+app/
+ ├── frontend/
+ ├── backend/
+```
+
+# 🚀 Running the Project Locally
+
+```bash
+make run-local
+```
+
+Run frontend:
+
+```bash
+cd app
+npm install
+npm run dev
+```
+# ☁️ Running in Production
+
+Trigger via GitHub push:
+
+```bash
+git push origin main
+```
+
+Or manually:
+
+```bash
+gcloud workflows run run-pipeline
+```
+
+# 📌 Highlights
+
+- Built scalable distributed ETL pipelines
+- Integrated multi-source global datasets
+- Designed production-grade cloud workflows
+- Automated deployment pipelines
+- Implemented cloud-native analytics architecture
+- Engineered large-scale sentiment processing system
+
+# 👩‍💻 Author
+
+### Prarthana Patel
+
+MSBA Candidate — UCLA Anderson School of Management
+
+Passionate about:
+- Data Analytics
+- Product Analytics
+- Cloud Data Engineering
+- Consumer Insights
+- AI-driven Analytics Systems
+
+# ⭐ If you found this project interesting
+
+Consider starring the repository to support the project.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
