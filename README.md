@@ -208,6 +208,32 @@ Passionate about:
 - Consumer Insights
 - AI-driven Analytics Systems
 
+# 📈 Key Insights
+
+- Positive global sentiment trends showed stronger correlation with high-valence music consumption
+- Emotional news cycles influenced listener behavior differently across countries
+- Delayed emotional response patterns were observed after major global events
+- Large-scale distributed processing enabled scalable multi-country sentiment analysis
+
+# 💼 Business Applications
+
+Potential applications of this platform include:
+
+- Music recommendation systems
+- Consumer mood analytics
+- Entertainment trend forecasting
+- Behavioral analytics research
+- Marketing personalization strategies
+- Sentiment-driven audience insights
+
+# Why This Project Matters
+
+Music reflects emotion, culture, and collective behavior.
+
+This project explores whether large-scale global sentiment patterns captured through worldwide news events may influence how people consume music across different countries and time periods.
+
+The goal was to combine cloud engineering, analytics infrastructure, and behavioral analysis into one scalable end-to-end platform.
+
 
 
 
