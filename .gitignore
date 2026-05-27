@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MacOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Secrets
+secrets/
+credentials/
+*.json
+
+# Data files
+data/local.db
+data/*.csv
+data/*.parquet
+
+# Snowflake / GCP keys
+kedro-key.json
+service-account.json
+
+# Node
+node_modules/
+
+# Environment variables
+.env.local
+.env.production
+
+# PySpark
+spark-warehouse/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Temporary files
+tmp/
+temp/
