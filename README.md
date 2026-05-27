@@ -25,39 +25,42 @@ We explored whether external emotional and societal shifts were reflected in:
 
 # 👩🏻‍💻 My Contributions
 
-This project was completed collaboratively as part of the UCLA Anderson MSBA program. My primary contributions focused on analytical workflow development, multi-source data integration, statistical analysis, and insight generation.
+This project was completed as part of a six-member UCLA Anderson MSBA team. My work primarily focused on data integration, analytical workflows, statistical analysis, and insight generation across the sentiment and music datasets.
 
-### Key Areas I Contributed To
+### Multi-Source Data Integration
+- Worked on integrating Spotify listening datasets with global news sentiment data collected across multiple countries and time periods.
+- Helped align datasets based on date, country, and temporal granularity to support downstream analysis and visualization.
+- Assisted in handling inconsistencies across source files, including missing values, schema mismatches, formatting differences, and duplicate records.
 
-#### 📊 Multi-Source Data Integration
-- Worked on integrating and aligning Spotify listening datasets with global news sentiment data across multiple countries and time periods.
-- Helped standardize schemas and temporal alignment to support downstream analysis and modeling.
+### Data Cleaning & Workflow Development
+- Contributed to ETL and preprocessing workflows using Python and SQL to improve data consistency and analytical reliability.
+- Supported validation and transformation workflows to ensure datasets were analysis-ready before modeling and visualization stages.
+- Participated in organizing structured workflows and GitHub-based collaboration for code integration and version management.
 
-#### ⚙️ Data Cleaning & ETL Workflows
-- Contributed to ETL and data validation workflows using Python and SQL.
-- Supported data cleaning, transformation, and reproducible workflow development to improve analytical consistency and reliability.
+### Statistical & Behavioral Analysis
+- Conducted statistical and correlation analysis to evaluate the relationship between external sentiment indicators and music listening behavior trends.
+- Worked on lag-based analysis to understand how quickly listener behavior changed following major global sentiment shifts and news events.
+- Analyzed behavioral listening trends across countries to identify differences in response patterns over time.
 
-#### 📈 Statistical & Behavioral Analysis
-- Conducted statistical and correlation analysis to evaluate relationships between sentiment indicators and music listening behavior.
-- Worked on lag-based analysis to understand delayed behavioral response patterns following major sentiment shifts.
-
-#### 🎧 Music Feature & Emotion Analysis
-- Helped engineer and analyze emotional music features such as:
+### Music Feature & Consumer Behavior Analysis
+- Helped engineer and analyze emotional and behavioral music features including:
   - valence,
   - energy,
   - joy,
   - anger,
   - and mood-related listening indicators.
+- Explored how emotional audio characteristics shifted during periods of positive and negative sentiment environments.
 
-#### 📉 Visualization & Insight Communication
-- Supported development of visualization-driven insights and dashboard outputs used to communicate:
+### Visualization & Insight Generation
+- Supported the development of dashboard outputs and visualization-driven insights including:
   - time-series trends,
-  - country comparisons,
-  - sentiment-behavior relationships,
-  - and behavioral response patterns.
+  - correlation visualizations,
+  - lag analysis,
+  - and country-level comparisons.
+- Helped translate analytical findings into clear insights that could explain consumer listening behavior patterns in response to external sentiment changes.
 
-#### 🤝 Collaborative Development
-- Collaborated using GitHub workflow management and version control to support code integration, testing, and team coordination in a multi-contributor analytics environment.
+### Tools & Technologies Used
+Python, SQL, Statistical Analysis, ETL Workflows, Data Cleaning, Time-Series Analysis, GitHub, Multi-Source Data Integration, Consumer Behavior Analytics, Data Visualization
 
 # 🛠️ Technical Stack
 
