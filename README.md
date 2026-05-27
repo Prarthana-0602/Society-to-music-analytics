@@ -113,4 +113,4 @@ The work also reinforced the importance of:
 
 # 📎 Repository Purpose
 
-This repository serves as a portfolio and contribution overview of project work completed as part of the UCLA Anderson MSBA program.
+This repository serves as a portfolio and contribution overview of project work completed at UCLA.
