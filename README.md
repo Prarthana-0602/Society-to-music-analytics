@@ -208,9 +208,6 @@ Passionate about:
 - Consumer Insights
 - AI-driven Analytics Systems
 
-# ⭐ If you found this project interesting
-
-Consider starring the repository to support the project.
 
 
 
