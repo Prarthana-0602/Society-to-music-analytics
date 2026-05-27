@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Society-to-Music Analytics</title>
+<style>
+:root{
+  --bg:#060d1a;--s1:#0b1526;--s2:#0f1e35;
+  --green:#1db954;--green2:#1ed760;--glow:rgba(29,185,84,.22);
+  --blue:#3b82f6;--pink:#e91e8c;--amber:#f59e0b;--cyan:#00d2d3;
+  --text:#fff;--muted:#8a9bb0;--dim:#2d3f57;
+  --border:rgba(29,185,84,.18);--border2:rgba(29,185,84,.4);
+  --mood-col:#1db954;--mood-bg:rgba(29,185,84,.12);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;position:relative}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(29,185,84,.055) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;z-index:0}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:52px 0 40px;border-bottom:1px solid var(--border)}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(29,185,84,.06) 0%,transparent 70%);pointer-events:none}
+.ctr{max-width:1180px;margin:0 auto;padding:0 32px}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:280px}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(29,185,84,.1);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:18px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+.hero h1{font-size:46px;font-weight:900;line-height:1.05;margin-bottom:10px}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:480px;margin-bottom:26px}
+.badges{display:flex;flex-wrap:wrap;gap:7px}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;letter-spacing:.02em}
+
+/* Equalizer animation */
+.eq{display:flex;align-items:flex-end;gap:4px;height:52px;flex-shrink:0}
+.eq-bar{width:5px;background:var(--green);border-radius:3px 3px 0 0;animation:eq var(--d,0.7s) ease-in-out infinite alternate}
+@keyframes eq{0%{height:6px;opacity:.4}100%{height:var(--h,32px);opacity:1}}
+.eq-bar:nth-child(1){--d:.55s;--h:28px}
+.eq-bar:nth-child(2){--d:.7s;--h:44px}
+.eq-bar:nth-child(3){--d:.45s;--h:36px}
+.eq-bar:nth-child(4){--d:.8s;--h:50px}
+.eq-bar:nth-child(5){--d:.6s;--h:38px}
+.eq-bar:nth-child(6){--d:.5s;--h:26px}
+.eq-bar:nth-child(7){--d:.75s;--h:46px}
+.eq-bar:nth-child(8){--d:.65s;--h:32px}
+.eq-bar:nth-child(9){--d:.9s;--h:42px}
+
+/* HERO STATS */
+.hero-stats{display:flex;gap:0;margin-top:28px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.hstat{flex:1;padding:16px 20px;border-right:1px solid var(--border);text-align:center}
+.hstat:last-child{border-right:none}
+.hstat-val{font-size:22px;font-weight:900;color:var(--green)}
+.hstat-lbl{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(6,13,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:2px;padding:10px 0}
+.tab{padding:8px 18px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);font-family:inherit}
+.tab:hover{color:var(--text)}
+.tab.active{background:rgba(29,185,84,.15);color:var(--green);border:1px solid var(--border2)}
+.filter-row{display:flex;align-items:center;gap:8px}
+.filter-row label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.filter-row select{padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);background:var(--s1);font-weight:600;outline:none;cursor:pointer;font-family:inherit;transition:border-color .2s}
+.filter-row select:hover{border-color:var(--border2)}
+
+/* MOOD BAR */
+.mood-bar{position:sticky;top:47px;z-index:99;background:rgba(6,13,26,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(29,185,84,.1);padding:9px 32px}
+.mood-bar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mood-label-txt{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.mood-btns{display:flex;gap:6px;flex-wrap:wrap}
+.mood-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--dim);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);font-family:inherit;line-height:1.4}
+.mood-btn:hover{border-color:rgba(255,255,255,.25);color:var(--text)}
+.mood-btn.active{border-color:var(--mood-col);color:var(--mood-col);background:var(--mood-bg)}
+.mood-desc{font-size:11px;color:var(--muted);margin-left:auto;font-style:italic;opacity:.7}
+
+/* MAIN */
+main{max-width:1180px;margin:0 auto;padding:30px 32px 80px;position:relative;z-index:1}
+.pane{animation:fadeUp .4s ease-out both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION */
+.section-label{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px 18px;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g1,transparent),var(--g2,transparent))}
+.kpi:hover{border-color:var(--border2);box-shadow:0 0 28px var(--glow)}
+.kpi-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:900;line-height:1;margin-bottom:4px}
+.kpi-sub{font-size:11px;color:var(--muted)}
+.kpi-trend{font-size:11px;color:var(--green);margin-top:6px;font-weight:700}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px 24px 18px;transition:border-color .2s,box-shadow .2s;margin-bottom:20px}
+.card:hover{border-color:rgba(29,185,84,.3);box-shadow:0 0 36px rgba(29,185,84,.07)}
+.card-last{margin-bottom:0}
+.ct{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.cs{font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.cleg{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;font-size:12px;color:var(--muted)}
+.li{display:flex;align-items:center;gap:5px}
+.lsw{width:11px;height:11px;border-radius:3px;display:inline-block;flex-shrink:0}
+.lln{width:20px;height:3px;border-radius:2px;display:inline-block;flex-shrink:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.cw{width:100%;line-height:0}
+.cw svg{width:100%;height:auto;display:block}
+
+/* STAT STRIP */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;background:rgba(255,255,255,.03);border-radius:12px;padding:14px;border:1px solid var(--dim)}
+.ss{text-align:center}
+.ss-val{font-size:18px;font-weight:900}
+.ss-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* TOOLTIP */
+#tt{position:fixed;display:none;background:rgba(6,13,26,.96);color:#e2e8f0;border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.6;pointer-events:none;z-index:999;border:1px solid var(--border2);max-width:220px;box-shadow:0 0 20px var(--glow)}
+#tt strong{color:var(--green);display:block;margin-bottom:5px;font-size:12px;border-bottom:1px solid rgba(29,185,84,.2);padding-bottom:4px;margin-bottom:5px}
+
+footer{background:var(--s1);border-top:1px solid var(--border);padding:22px 32px;text-align:center;position:relative;z-index:1}
+footer p{font-size:12px;color:var(--dim)}
+footer span{color:var(--green)}
+
+@media(max-width:860px){.kpi-grid{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.hero h1{font-size:32px}.hero-stats{flex-wrap:wrap}.mood-bar{top:40px}}
+</style>
+</head>
+<body>
+<div id="tt"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ctr">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag"><div class="pulse"></div>Live Analytics Platform</div>
+        <h1>Society-to-Music<br><em>Analytics</em></h1>
+        <p class="hero-sub">Exploring how global news sentiment drives what the world listens to. Real-time correlations between GDELT news data and Spotify streaming behavior across 6 countries.</p>
+        <div class="badges">
+          <span class="badge" style="color:#fb7185;border-color:#e11d4840;background:#e11d4812">⚡ PySpark</span>
+          <span class="badge" style="color:#60a5fa;border-color:#3b82f640;background:#3b82f612">☁️ GCP</span>
+          <span class="badge" style="color:#38bdf8;border-color:#0284c740;background:#0284c712">❄️ Snowflake</span>
+          <span class="badge" style="color:#34d399;border-color:#05996940;background:#05996912">🚀 FastAPI</span>
+          <span class="badge" style="color:#c4b5fd;border-color:#7c3aed40;background:#7c3aed12">🔄 CI/CD</span>
+          <span class="badge" style="color:#fbbf24;border-color:#d9770640;background:#d9770612">🦆 DuckDB</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hstat-val">r = 0.37</div><div class="hstat-lbl">Correlation</div></div>
+          <div class="hstat"><div class="hstat-val">24 h</div><div class="hstat-lbl">Peak Lag</div></div>
+          <div class="hstat"><div class="hstat-val">6</div><div class="hstat-lbl">Countries</div></div>
+          <div class="hstat"><div class="hstat-val">12 mo</div><div class="hstat-lbl">Coverage</div></div>
+        </div>
+      </div>
+      <div class="eq" aria-hidden="true">
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('overview',this)">📊 Overview</button>
+      <button class="tab" onclick="showTab('sentiment',this)">🔍 Sentiment Analysis</button>
+    </div>
+    <div class="filter-row">
+      <label>Country</label>
+      <select id="csel" onchange="redrawAll()">
+        <option>All</option><option>USA</option><option>UK</option>
+        <option>Germany</option><option>Brazil</option><option>Japan</option><option>Australia</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
+<!-- MOOD BAR -->
+<div class="mood-bar">
+  <div class="mood-bar-inner">
+    <span class="mood-label-txt">🎭 Mood</span>
+    <div class="mood-btns">
+      <button class="mood-btn active" data-mood="All" onclick="setMood('All',this)">🎵 All</button>
+      <button class="mood-btn" data-mood="Happy" onclick="setMood('Happy',this)">😊 Happy</button>
+      <button class="mood-btn" data-mood="Sad" onclick="setMood('Sad',this)">😢 Sad</button>
+      <button class="mood-btn" data-mood="Nostalgic" onclick="setMood('Nostalgic',this)">🌙 Nostalgic</button>
+      <button class="mood-btn" data-mood="Energetic" onclick="setMood('Energetic',this)">⚡ Energetic</button>
+      <button class="mood-btn" data-mood="Calm" onclick="setMood('Calm',this)">🧘 Calm</button>
+      <button class="mood-btn" data-mood="Angry" onclick="setMood('Angry',this)">😤 Angry</button>
+    </div>
+    <span class="mood-desc" id="mood-desc">Showing all listening patterns</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <!-- OVERVIEW PANE -->
+  <div id="pane-overview" class="pane">
+    <div class="kpi-grid">
+      <div class="kpi" style="--g1:#6366f1;--g2:#8b5cf6">
+        <div class="kpi-lbl">Correlation</div>
+        <div class="kpi-val" style="color:#818cf8">r = 0.37</div>
+        <div class="kpi-sub">Pearson, all countries</div>
+        <div class="kpi-trend">↑ p &lt; 0.01</div>
+      </div>
+      <div class="kpi" style="--g1:#1db954;--g2:#1ed760">
+        <div class="kpi-lbl">Peak Response Lag</div>
+        <div class="kpi-val" style="color:var(--green)">24 h</div>
+        <div class="kpi-sub">Strongest signal window</div>
+        <div class="kpi-trend">Music reacts in 1 day</div>
+      </div>
+      <div class="kpi" style="--g1:#f59e0b;--g2:#fbbf24">
+        <div class="kpi-lbl">Countries</div>
+        <div class="kpi-val" style="color:#fbbf24">6</div>
+        <div class="kpi-sub">USA · UK · DE · BR · JP · AU</div>
+      </div>
+      <div class="kpi" style="--g1:#e91e8c;--g2:#ec4899">
+        <div class="kpi-lbl">Data Points</div>
+        <div class="kpi-val" style="color:#f472b6">72</div>
+        <div class="kpi-sub">Country × month pairs</div>
+      </div>
+    </div>
+
+    <div class="section-label">Sentiment &amp; Valence Trends</div>
+
+    <div class="card">
+      <div class="ct">News sentiment vs music valence over time</div>
+      <div class="cs">Monthly GDELT sentiment score overlaid with Spotify track valence. Changes with country and mood filter.</div>
+      <div class="cleg">
+        <span class="li"><span class="lln" style="background:#1db954"></span>News sentiment (left)</span>
+        <span class="li"><span class="lln" style="background:#3b82f6;background:repeating-linear-gradient(90deg,#3b82f6 0,#3b82f6 5px,transparent 5px,transparent 9px)"></span>Music valence (right)</span>
+      </div>
+      <div class="cw" id="c-timeline"></div>
+    </div>
+
+    <div class="card">
+      <div class="ct">Streaming volume over time</div>
+      <div class="cs">Monthly index of Spotify streaming activity. Peaks and dips align with major news cycles.</div>
+      <div class="cw" id="c-volume"></div>
+    </div>
+
+    <div class="section-label">Country Breakdown</div>
+
+    <div class="grid2">
+      <div class="card card-last">
+        <div class="ct">Sentiment vs valence scatter</div>
+        <div class="cs">Each dot is a country-month pair. Country filter highlights the selected country.</div>
+        <div class="cw" id="c-scatter"></div>
+        <div class="cleg" style="margin-top:10px;margin-bottom:0">
+          <span class="li"><span class="lsw" style="background:#1db954"></span>USA</span>
+          <span class="li"><span class="lsw" style="background:#3b82f6"></span>UK</span>
+          <span class="li"><span class="lsw" style="background:#f59e0b"></span>Germany</span>
+          <span class="li"><span class="lsw" style="background:#e91e8c"></span>Brazil</span>
+          <span class="li"><span class="lsw" style="background:#00d2d3"></span>Japan</span>
+          <span class="li"><span class="lsw" style="background:#f97316"></span>Australia</span>
+        </div>
+      </div>
+      <div class="card card-last">
+        <div class="ct">Correlation by country</div>
+        <div class="cs">Selected country is highlighted. Germany shows the strongest sentiment coupling.</div>
+        <div class="cw" id="c-country"></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:20px">Sentiment Heatmap</div>
+    <div class="card">
+      <div class="ct">Global sentiment heatmap — country × month</div>
+      <div class="cs">Each cell shows the GDELT sentiment score. Dark red = strongly negative, bright green = strongly positive. Filter changes highlight row.</div>
+      <div class="cw" id="c-heatmap"></div>
+    </div>
+  </div>
+
+  <!-- SENTIMENT PANE -->
+  <div id="pane-sentiment" class="pane" style="display:none">
+    <div class="section-label">Temporal Analysis</div>
+
+    <div class="card">
+      <div class="ct">Lag analysis — when does news affect music?</div>
+      <div class="cs">Correlation at each time delay. Peak at 24 h — streaming shifts within one day of a major news event.</div>
+      <div class="cw" id="c-lag"></div>
+      <div class="stat-strip">
+        <div class="ss"><div class="ss-val" style="color:var(--green)">24 h</div><div class="ss-lbl">Peak lag</div></div>
+        <div class="ss"><div class="ss-val" style="color:var(--green)">r = 0.37</div><div class="ss-lbl">Max correlation</div></div>
+        <div class="ss"><div class="ss-val" style="color:#3b82f6">p &lt; 0.01</div><div class="ss-lbl">Significance</div></div>
+        <div class="ss"><div class="ss-val" style="color:var(--muted)">72 h</div><div class="ss-lbl">Effect dissipates</div></div>
+      </div>
+    </div>
+
+    <div class="section-label">Rolling Correlation &amp; Audio Profile</div>
+
+    <div class="grid2">
+      <div class="card card-last">
+        <div class="ct">3-month rolling correlation</div>
+        <div class="cs">How the sentiment→valence relationship shifts across the year. All countries shown; selected country highlighted.</div>
+        <div class="cleg" id="rolling-leg">
+          <span class="li"><span class="lln" style="background:#1db954"></span>Selected country</span>
+          <span class="li"><span class="lln" style="background:rgba(255,255,255,.2)"></span>Other countries</span>
+        </div>
+        <div class="cw" id="c-rolling"></div>
+      </div>
+      <div class="card card-last">
+        <div class="ct">Audio feature profile</div>
+        <div class="cs">Spotify audio attributes shift with mood and country. Mood filter shows how listening habits align with emotional states.</div>
+        <div class="cleg">
+          <span class="li" id="audio-leg-swatch"><span class="lsw" style="background:#1db954"></span><span id="audio-leg-txt">Current selection</span></span>
+        </div>
+        <div class="cw" id="c-audio"></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:20px">Emotion Profile</div>
+
+    <div class="grid2">
+      <div class="card card-last">
+        <div class="ct">Music emotion radar</div>
+        <div class="cs">Emotional attribute scores during positive vs negative news cycles. Updates with country and mood.</div>
+        <div class="cleg">
+          <span class="li"><span class="lsw" style="background:#1db954;opacity:.8"></span>Positive news</span>
+          <span class="li"><span class="lsw" style="background:#e91e8c;opacity:.7"></span>Negative news</span>
+        </div>
+        <div class="cw" id="c-radar"></div>
+      </div>
+      <div class="card card-last">
+        <div class="ct">Attribute breakdown</div>
+        <div class="cs">Anger, sadness, and fear increase during negative news cycles. Updates with country and mood.</div>
+        <div class="cleg">
+          <span class="li"><span class="lsw" style="background:#1db954"></span>Positive news period</span>
+          <span class="li"><span class="lsw" style="background:#e91e8c"></span>Negative news period</span>
+        </div>
+        <div class="cw" id="c-emotion"></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:20px">Country Intelligence</div>
+    <div class="card">
+      <div class="ct">Country bubble map — correlation vs sentiment</div>
+      <div class="cs">X = avg news sentiment, Y = sentiment-valence correlation, bubble size = relative streaming volume. Highlighted country is selected in filter.</div>
+      <div class="cw" id="c-bubble"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Society-to-Music Analytics &nbsp;·&nbsp; PySpark · GCP · Snowflake · FastAPI · React &nbsp;·&nbsp; <span>Built with pure SVG — no dependencies</span></p>
+</footer>
+
+<script>
+// ── MOOD STATE ────────────────────────────────────────────────────────────
+let currentMood = 'All';
+
+const MOOD_COLORS = {
+  All:'#1db954', Happy:'#f59e0b', Sad:'#3b82f6',
+  Nostalgic:'#8b5cf6', Energetic:'#f97316', Calm:'#00d2d3', Angry:'#e91e8c'
+};
+const MOOD_BG = {
+  All:'rgba(29,185,84,.12)', Happy:'rgba(245,158,11,.12)', Sad:'rgba(59,130,246,.12)',
+  Nostalgic:'rgba(139,92,246,.12)', Energetic:'rgba(249,115,22,.12)',
+  Calm:'rgba(0,210,211,.12)', Angry:'rgba(233,30,140,.12)'
+};
+const MOOD_DESC = {
+  All:'Showing all listening patterns',
+  Happy:'Happy listeners favor upbeat, high-valence tracks',
+  Sad:'Sad moods correlate with slower, more acoustic music',
+  Nostalgic:'Nostalgic listeners gravitate toward older, mellower sounds',
+  Energetic:'High-energy mood drives uptempo, danceable streaming',
+  Calm:'Calm mood favors ambient, instrumental, low-tempo tracks',
+  Angry:'Angry listeners spike in high-energy, low-valence tracks'
+};
+// How mood shifts sentiment/valence perception
+const MOOD_SV = {
+  All:{s:0,v:0,vol:0}, Happy:{s:.06,v:.11,vol:14}, Sad:{s:-.08,v:-.13,vol:-10},
+  Nostalgic:{s:-.03,v:.02,vol:-6}, Energetic:{s:.05,v:.07,vol:18},
+  Calm:{s:.02,v:.05,vol:-9}, Angry:{s:-.10,v:-.08,vol:7}
+};
+// How mood shifts emotion attribute scores
+const MOOD_EMO = {
+  All:{p:0,n:0}, Happy:{p:11,n:-9}, Sad:{p:-9,n:13},
+  Nostalgic:{p:3,n:4}, Energetic:{p:7,n:-5},
+  Calm:{p:5,n:-3}, Angry:{p:-11,n:15}
+};
+// Audio feature base values (0-100 scale)
+const AUDIO_FEATS = ['Danceability','Energy','Valence','Acousticness','Instrumentalness','Speechiness'];
+const AUDIO_BASE = {Danceability:62,Energy:67,Valence:54,Acousticness:38,Instrumentalness:42,Speechiness:28};
+// Mood offsets for audio features
+const AUDIO_MOOD = {
+  All:  {Danceability:0,  Energy:0,  Valence:0,  Acousticness:0,  Instrumentalness:0,  Speechiness:0},
+  Happy:{Danceability:13, Energy:11, Valence:15, Acousticness:-9, Instrumentalness:-6, Speechiness:3},
+  Sad:  {Danceability:-14,Energy:-13,Valence:-17,Acousticness:17, Instrumentalness:9,  Speechiness:-6},
+  Nostalgic:{Danceability:-6,Energy:-9,Valence:2,Acousticness:14,Instrumentalness:13,Speechiness:-9},
+  Energetic:{Danceability:14,Energy:17,Valence:9,Acousticness:-13,Instrumentalness:-11,Speechiness:7},
+  Calm: {Danceability:-11,Energy:-15,Valence:5, Acousticness:15, Instrumentalness:16, Speechiness:-11},
+  Angry:{Danceability:5,  Energy:15, Valence:-15,Acousticness:-11,Instrumentalness:-7, Speechiness:9}
+};
+// Country offsets for audio features (subtle)
+const AUDIO_CTRY = {
+  All:{Danceability:0,Energy:0,Valence:0,Acousticness:0,Instrumentalness:0,Speechiness:0},
+  USA:{Danceability:4,Energy:3,Valence:3,Acousticness:-3,Instrumentalness:-2,Speechiness:2},
+  UK:{Danceability:-2,Energy:1,Valence:-2,Acousticness:3,Instrumentalness:2,Speechiness:-1},
+  Germany:{Danceability:-3,Energy:2,Valence:-3,Acousticness:1,Instrumentalness:7,Speechiness:-3},
+  Brazil:{Danceability:9,Energy:6,Valence:7,Acousticness:2,Instrumentalness:-4,Speechiness:3},
+  Japan:{Danceability:-4,Energy:-2,Valence:1,Acousticness:4,Instrumentalness:9,Speechiness:-5},
+  Australia:{Danceability:3,Energy:4,Valence:4,Acousticness:-2,Instrumentalness:-1,Speechiness:1}
+};
+// Rolling correlation base: monthly r values (Jan–Dec)
+const ROLL_BASE = [.24,.27,.31,.35,.38,.37,.34,.31,.28,.25,.28,.32];
+const ROLL_CTRY = {
+  All:0,USA:.03,UK:-.04,Germany:.05,Brazil:-.03,Japan:.01,Australia:.02
+};
+// Per-country waveform phases so lines look distinct
+const ROLL_WAVE = [0,0.8,1.6,2.4,3.2,4.0];
+
+function setMood(mood, btn) {
+  currentMood = mood;
+  const col = MOOD_COLORS[mood];
+  const bg  = MOOD_BG[mood];
+  // Update CSS vars
+  document.documentElement.style.setProperty('--mood-col', col);
+  document.documentElement.style.setProperty('--mood-bg', bg);
+  // Update buttons
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update desc
+  document.getElementById('mood-desc').textContent = MOOD_DESC[mood] || '';
+  // Update audio legend
+  const swatch = document.getElementById('audio-leg-swatch').querySelector('.lsw');
+  const ltxt   = document.getElementById('audio-leg-txt');
+  swatch.style.background = col;
+  ltxt.textContent = mood === 'All' ? 'Baseline audio profile' : `${mood} mood profile`;
+  redrawAll();
+}
+
+// ── TOOLTIP ─────────────────────────────────────────────────────────────
+const tt = document.getElementById('tt');
+function showTt(e, html) { tt.innerHTML = html; tt.style.display = 'block'; moveTt(e); }
+function moveTt(e) { tt.style.left = (e.clientX + 16) + 'px'; tt.style.top = (e.clientY - 54) + 'px'; }
+function hideTt() { tt.style.display = 'none'; }
+
+// ── SVG HELPERS ──────────────────────────────────────────────────────────
+const NS = 'http://www.w3.org/2000/svg';
+function se(tag, a, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in a) e.setAttribute(k, a[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function svgRoot(w, h) { return se('svg', { viewBox: `0 0 ${w} ${h}`, xmlns: NS }); }
+function gline(svg, x1, y1, x2, y2, stroke, sw, dash) {
+  const a = { x1, y1, x2, y2, stroke: stroke || 'rgba(255,255,255,0.06)', 'stroke-width': sw || 1 };
+  if (dash) a['stroke-dasharray'] = dash;
+  se('line', a, svg);
+}
+function grect(svg, x, y, w, h, fill, rx, extra) {
+  se('rect', Object.assign({ x, y, width: w, height: h, fill, rx: rx || 0 }, extra || {}), svg);
+}
+function gtxt(svg, x, y, s, fill, size, anchor, weight) {
+  const e = se('text', { x, y, fill: fill || '#8a9bb0', 'font-size': size || 11, 'font-family': '-apple-system,sans-serif', 'text-anchor': anchor || 'middle', 'dominant-baseline': 'middle', 'font-weight': weight || 400 }, svg);
+  e.textContent = s;
+  return e;
+}
+function gcircle(svg, cx, cy, r, fill, opacity, extra) {
+  return se('circle', Object.assign({ cx, cy, r, fill, opacity: opacity || 1 }, extra || {}), svg);
+}
+function gpath(svg, d, fill, fop, stroke, sw, dash) {
+  const a = { d, fill: fill || 'none', 'fill-opacity': fop || 0, stroke: stroke || 'none', 'stroke-width': sw || 2 };
+  if (dash) a['stroke-dasharray'] = dash;
+  return se('path', a, svg);
+}
+function gpoly(svg, pts, fill, fop, stroke, sw) {
+  se('polygon', { points: pts.map(p => p.join(',')).join(' '), fill, 'fill-opacity': fop, stroke, 'stroke-width': sw }, svg);
+}
+function glowDef(svg, id, color, blur) {
+  const defs = se('defs', {}, svg);
+  const f = se('filter', { id, x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
+  se('feGaussianBlur', { stdDeviation: blur || 3, result: 'b' }, f);
+  const m = se('feMerge', {}, f);
+  se('feMergeNode', { in: 'b' }, m);
+  se('feMergeNode', { in: 'SourceGraphic' }, m);
+}
+function gradDef(svg, id, c1, c2, vert) {
+  const defs = svg.querySelector('defs') || se('defs', {}, svg);
+  const g = se('linearGradient', vert ? { id, x1:0, y1:0, x2:0, y2:1 } : { id, x1:0, y1:0, x2:1, y2:0 }, defs);
+  se('stop', { offset: '0%', 'stop-color': c1 }, g);
+  se('stop', { offset: '100%', 'stop-color': c2 }, g);
+}
+function smoothPath(pts) {
+  if (!pts.length) return '';
+  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const p0 = pts[i-1], p1 = pts[i], pm = i>1?pts[i-2]:p0, pn = i<pts.length-1?pts[i+1]:p1;
+    const cp1x = +(p0[0]+(p1[0]-pm[0])/6).toFixed(1), cp1y = +(p0[1]+(p1[1]-pm[1])/6).toFixed(1);
+    const cp2x = +(p1[0]-(pn[0]-p0[0])/6).toFixed(1), cp2y = +(p1[1]-(pn[1]-p0[1])/6).toFixed(1);
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p1[0].toFixed(1)},${p1[1].toFixed(1)}`;
+  }
+  return d;
+}
+
+// ── DATA ─────────────────────────────────────────────────────────────────
+const BASE = [
+  {m:'Jan 23',s:-.18,v:.43,vol:82},{m:'Feb 23',s:-.09,v:.47,vol:87},
+  {m:'Mar 23',s:.04,v:.52,vol:94},{m:'Apr 23',s:.11,v:.55,vol:98},
+  {m:'May 23',s:.17,v:.59,vol:106},{m:'Jun 23',s:.08,v:.54,vol:101},
+  {m:'Jul 23',s:-.05,v:.50,vol:97},{m:'Aug 23',s:-.14,v:.46,vol:90},
+  {m:'Sep 23',s:-.22,v:.43,vol:85},{m:'Oct 23',s:-.30,v:.38,vol:79},
+  {m:'Nov 23',s:-.14,v:.44,vol:89},{m:'Dec 23',s:.06,v:.52,vol:100}
+];
+const OFF = {
+  All:{s:0,v:0,vol:0}, USA:{s:.03,v:.02,vol:8}, UK:{s:-.05,v:-.02,vol:-5},
+  Germany:{s:.01,v:-.03,vol:4}, Brazil:{s:.07,v:.05,vol:12},
+  Japan:{s:-.02,v:.03,vol:-2}, Australia:{s:.04,v:.01,vol:3}
+};
+function getData(country) {
+  const o = OFF[country]||OFF.All;
+  const m = MOOD_SV[currentMood]||MOOD_SV.All;
+  return BASE.map(d=>({
+    m:d.m,
+    s:+(d.s+o.s+m.s).toFixed(3),
+    v:+(d.v+o.v+m.v).toFixed(3),
+    vol:Math.round(d.vol+o.vol+m.vol)
+  }));
+}
+
+const LAG_D = [
+  {h:'0h',r:.12},{h:'6h',r:.20},{h:'12h',r:.27},{h:'18h',r:.33},
+  {h:'24h',r:.37,peak:true},{h:'30h',r:.32},{h:'36h',r:.26},
+  {h:'42h',r:.21},{h:'48h',r:.17},{h:'54h',r:.13},{h:'60h',r:.10},{h:'66h',r:.08},{h:'72h',r:.06}
+];
+const CTRY_D = [
+  {c:'Germany',r:.42},{c:'USA',r:.38},{c:'Japan',r:.35},
+  {c:'Australia',r:.33},{c:'UK',r:.31},{c:'Brazil',r:.29}
+];
+const CTRY_NAMES = ['USA','UK','Germany','Brazil','Japan','Australia'];
+const CTRY_COLORS = ['#1db954','#3b82f6','#f59e0b','#e91e8c','#00d2d3','#f97316'];
+const RADAR_D = [
+  {sub:'Valence',pos:71,neg:49},{sub:'Energy',pos:68,neg:55},
+  {sub:'Joy',pos:65,neg:44},{sub:'Anger',pos:28,neg:57},
+  {sub:'Sadness',pos:34,neg:61},{sub:'Fear',pos:22,neg:53}
+];
+const EMOTION_D = [
+  {a:'Valence',p:71,n:49},{a:'Energy',p:68,n:55},{a:'Joy',p:65,n:44},
+  {a:'Anger',p:28,n:57},{a:'Sadness',p:34,n:61},{a:'Fear',p:22,n:53}
+];
+const BUBBLE_D = [
+  {c:'USA',r:.38,as:.023,sz:38},{c:'UK',r:.31,as:-.057,sz:25},
+  {c:'Germany',r:.42,as:-.007,sz:32},{c:'Brazil',r:.29,as:.077,sz:42},
+  {c:'Japan',r:.35,as:-.027,sz:28},{c:'Australia',r:.33,as:.047,sz:30}
+];
+
+// Seeded scatter data
+function lcg(seed){let s=seed>>>0;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+const rng=lcg(42);
+const SCATTER_BASE=CTRY_NAMES.flatMap((c,ci)=>Array.from({length:14},()=>{
+  const s=-0.42+rng()*.84;
+  const v=Math.min(.88,Math.max(.18,.36+s*.34+(rng()-.5)*.14));
+  return{c,color:CTRY_COLORS[ci],s:+s.toFixed(3),v:+v.toFixed(3)};
+}));
+
+// Emotion offset per country + mood
+const EMO_OFF = {
+  All:{p:0,n:0}, USA:{p:3,n:-2}, UK:{p:-4,n:4},
+  Germany:{p:5,n:-4}, Brazil:{p:7,n:-5}, Japan:{p:-2,n:3}, Australia:{p:2,n:-1}
+};
+function getEmotion(country) {
+  const o = EMO_OFF[country]||EMO_OFF.All;
+  const m = MOOD_EMO[currentMood]||MOOD_EMO.All;
+  return EMOTION_D.map(d=>({a:d.a,
+    p:Math.min(99,Math.max(1,d.p+o.p+m.p)),
+    n:Math.min(99,Math.max(1,d.n+o.n+m.n))
+  }));
+}
+function getRadar(country) {
+  const o = EMO_OFF[country]||EMO_OFF.All;
+  const m = MOOD_EMO[currentMood]||MOOD_EMO.All;
+  return RADAR_D.map(d=>({sub:d.sub,
+    pos:Math.min(99,Math.max(1,d.pos+o.p+m.p)),
+    neg:Math.min(99,Math.max(1,d.neg+o.n+m.n))
+  }));
+}
+
+// Heatmap data
+function getHeatmap(country) {
+  return CTRY_NAMES.map((c,ci)=>{
+    const o = OFF[c]||OFF.All;
+    const m = MOOD_SV[currentMood]||MOOD_SV.All;
+    return {country:c,color:CTRY_COLORS[ci],
+      values:BASE.map(d=>+(d.s+o.s+m.s*.5).toFixed(3)),
+      highlight: country==='All'||country===c
+    };
+  });
+}
+
+// Lag data
+const LAG_OFF={All:0,USA:.02,UK:-.03,Germany:.04,Brazil:-.02,Japan:.01,Australia:.02};
+function getLag(country){
+  const o=LAG_OFF[country]||0;
+  return LAG_D.map(d=>({h:d.h,r:Math.min(.45,Math.max(.01,+(d.r+o).toFixed(3))),peak:d.peak}));
+}
+
+// Bubble data
+function getBubble(country){
+  return BUBBLE_D.map((d)=>({...d,color:CTRY_COLORS[CTRY_NAMES.indexOf(d.c)],
+    selected:country==='All'||country===d.c}));
+}
+
+// Audio feature data (country + mood)
+function getAudio(country) {
+  const mc = AUDIO_CTRY[country]||AUDIO_CTRY.All;
+  const mm = AUDIO_MOOD[currentMood]||AUDIO_MOOD.All;
+  return AUDIO_FEATS.map(f=>({
+    f,
+    val: Math.min(98,Math.max(4, AUDIO_BASE[f] + (mc[f]||0) + (mm[f]||0)))
+  }));
+}
+
+// Rolling 3-month correlation per country
+function getRolling(country) {
+  return CTRY_NAMES.map((c,ci)=>{
+    const base = ROLL_BASE.map((v,i)=>{
+      const o = ROLL_CTRY[c]||0;
+      const wave = Math.sin(i*Math.PI/5.5 + ROLL_WAVE[ci]) * 0.028;
+      return Math.min(.52,Math.max(.04, v + o + wave));
+    });
+    // 3-month rolling avg
+    const rolled = base.map((v,i)=>{
+      const win = base.slice(Math.max(0,i-2), i+1);
+      return +(win.reduce((a,b)=>a+b,0)/win.length).toFixed(3);
+    });
+    return {c, color:CTRY_COLORS[ci], rolled,
+      highlighted: country==='All'||country===c};
+  });
+}
+
+// ── COLOR HELPERS ────────────────────────────────────────────────────────
+function lerp(a,b,t){return a+(b-a)*t}
+function heatColor(val){
+  const t=Math.max(-1,Math.min(1,val/.35));
+  if(t<0){
+    const s=-t;
+    return `rgb(${Math.round(lerp(30,160,s))},${Math.round(lerp(40,28,s))},${Math.round(lerp(55,35,s))})`;
+  } else {
+    const s=t;
+    return `rgb(${Math.round(lerp(30,20,s))},${Math.round(lerp(40,185,s))},${Math.round(lerp(55,84,s))})`;
+  }
+}
+
+// ── CHART: TIMELINE ──────────────────────────────────────────────────────
+function drawTimeline(data) {
+  const W=780,H=270,ML=52,MR=54,MT=18,MB=38,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const defs=se('defs',{},svg);
+  const g1=se('linearGradient',{id:'tg1',x1:0,y1:0,x2:0,y2:1},defs);
+  se('stop',{offset:'0%','stop-color':'#1db954','stop-opacity':.3},g1);
+  se('stop',{offset:'100%','stop-color':'#1db954','stop-opacity':.01},g1);
+  glowDef(svg,'tglow','#1db954',4);
+
+  const sMin=-.55,sMax=.55,vMin=.12,vMax=.82;
+  const xS=i=>ML+(i/(data.length-1))*PW;
+  const yL=v=>MT+PH-((v-sMin)/(sMax-sMin))*PH;
+  const yR=v=>MT+PH-((v-vMin)/(vMax-vMin))*PH;
+  const y0=yL(0);
+
+  for(let i=0;i<=4;i++) gline(svg,ML,MT+i/4*PH,ML+PW,MT+i/4*PH);
+  gline(svg,ML,y0,ML+PW,y0,'rgba(255,255,255,0.12)',1,'4 3');
+
+  [-.4,-.2,0,.2,.4].forEach(v=>{
+    gline(svg,ML-3,yL(v),ML,yL(v),'rgba(255,255,255,0.15)',1);
+    gtxt(svg,ML-8,yL(v),v.toFixed(1),'#8a9bb0',10,'end');
+  });
+  gtxt(svg,12,MT+PH/2,'Sentiment','#8a9bb0',10,'middle');
+
+  [.2,.35,.5,.65,.8].forEach(v=>{
+    gline(svg,ML+PW,yR(v),ML+PW+3,yR(v),'rgba(255,255,255,0.15)',1);
+    gtxt(svg,ML+PW+28,yR(v),v.toFixed(2),'#8a9bb0',10,'middle');
+  });
+  gtxt(svg,W-8,MT+PH/2,'Valence','#8a9bb0',10,'middle');
+
+  data.forEach((d,i)=>{
+    if(i%2===0){
+      const x=xS(i);
+      gline(svg,x,MT+PH,x,MT+PH+4,'rgba(255,255,255,0.15)',1);
+      gtxt(svg,x,MT+PH+16,d.m,'#8a9bb0',10);
+    }
+  });
+
+  const sentPts=data.map((d,i)=>[xS(i),yL(d.s)]);
+  const aD=smoothPath(sentPts)+` L ${xS(data.length-1).toFixed(1)},${y0.toFixed(1)} L ${xS(0).toFixed(1)},${y0.toFixed(1)} Z`;
+  gpath(svg,aD,'url(#tg1)',1,'none',0);
+  gpath(svg,smoothPath(sentPts),'none',0,'#1db954',2.2);
+
+  const valPts=data.map((d,i)=>[xS(i),yR(d.v)]);
+  gpath(svg,smoothPath(valPts),'none',0,'#3b82f6',2.2,'6 3');
+
+  data.forEach((d,i)=>{
+    const x=xS(i),ys=yL(d.s),yv=yR(d.v);
+    const html=`<strong>${d.m}</strong>Sentiment: ${d.s}<br>Valence: ${d.v}`;
+    [gcircle(svg,x,ys,5,'#1db954'),gcircle(svg,x,yv,5,'#3b82f6')].forEach(dot=>{
+      dot.style.cursor='crosshair';
+      dot.addEventListener('mousemove',e=>{showTt(e,html);moveTt(e)});
+      dot.addEventListener('mouseleave',hideTt);
+    });
+  });
+
+  const el=document.getElementById('c-timeline');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: VOLUME ────────────────────────────────────────────────────────
+function drawVolume(data) {
+  const W=780,H=200,ML=50,MR=20,MT=18,MB=38,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const defs=se('defs',{},svg);
+  const g=se('linearGradient',{id:'vg',x1:0,y1:0,x2:0,y2:1},defs);
+  se('stop',{offset:'0%','stop-color':'#1ed760','stop-opacity':.25},g);
+  se('stop',{offset:'100%','stop-color':'#1ed760','stop-opacity':.01},g);
+
+  const allVols=data.map(d=>d.vol);
+  const vmin=Math.max(0,Math.min(...allVols)-10);
+  const vmax=Math.max(...allVols)+10;
+  const xS=i=>ML+(i/(data.length-1))*PW;
+  const yS=v=>MT+PH-((v-vmin)/(vmax-vmin))*PH;
+
+  for(let i=0;i<=4;i++){
+    const y=MT+i/4*PH;
+    gline(svg,ML,y,ML+PW,y);
+    const v=Math.round(vmax-(i/4)*(vmax-vmin));
+    gtxt(svg,ML-8,y,v,'#8a9bb0',10,'end');
+  }
+  data.forEach((d,i)=>{
+    if(i%2===0){
+      const x=xS(i);
+      gline(svg,x,MT+PH,x,MT+PH+4,'rgba(255,255,255,0.15)',1);
+      gtxt(svg,x,MT+PH+16,d.m,'#8a9bb0',10);
+    }
+  });
+
+  const pts=data.map((d,i)=>[xS(i),yS(d.vol)]);
+  const aD=smoothPath(pts)+` L ${xS(data.length-1).toFixed(1)},${(MT+PH).toFixed(1)} L ${xS(0).toFixed(1)},${(MT+PH).toFixed(1)} Z`;
+  gpath(svg,aD,'url(#vg)',1,'none',0);
+  gpath(svg,smoothPath(pts),'none',0,'#1ed760',2);
+
+  data.forEach((d,i)=>{
+    const c=gcircle(svg,xS(i),yS(d.vol),4.5,'#1ed760');
+    c.style.cursor='crosshair';
+    c.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.m}</strong>Streams index: ${d.vol}`);moveTt(e)});
+    c.addEventListener('mouseleave',hideTt);
+  });
+
+  const el=document.getElementById('c-volume');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: SCATTER ───────────────────────────────────────────────────────
+function drawScatter(country) {
+  const W=500,H=255,ML=46,MR=14,MT=14,MB=36,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const m=MOOD_SV[currentMood]||MOOD_SV.All;
+  const xS=v=>ML+((v+.60)/1.20)*PW;
+  const yS=v=>MT+PH-((v-.12)/.80)*PH;
+
+  [-0.4,-0.2,0,.2,.4].forEach(v=>{
+    gline(svg,xS(v),MT,xS(v),MT+PH);
+    gtxt(svg,xS(v),MT+PH+14,v.toFixed(1),'#8a9bb0',10);
+  });
+  [0.2,.4,.6,.8].forEach(v=>{
+    gline(svg,ML,yS(v),ML+PW,yS(v));
+    gtxt(svg,ML-6,yS(v),v.toFixed(1),'#8a9bb0',10,'end');
+  });
+  gline(svg,xS(0),MT,xS(0),MT+PH,'rgba(255,255,255,0.12)',1,'3 3');
+  gtxt(svg,ML+PW/2,H-4,'News Sentiment','#8a9bb0',10);
+  gtxt(svg,10,MT+PH/2,'Valence','#8a9bb0',10);
+
+  const o=OFF[country]||OFF.All;
+  SCATTER_BASE.forEach(d=>{
+    const dimmed=country!=='All'&&country!==d.c;
+    const cx=xS(d.s+o.s+m.s), cy=yS(d.v+o.v+m.v);
+    if(cx<ML-2||cx>ML+PW+2||cy<MT-2||cy>MT+PH+2) return;
+    const c=gcircle(svg,cx,cy,dimmed?4:6,d.color,dimmed?.16:.78);
+    if(!dimmed){
+      c.style.cursor='crosshair';
+      c.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.c}</strong>Sentiment: ${(d.s+o.s+m.s).toFixed(3)}<br>Valence: ${(d.v+o.v+m.v).toFixed(3)}`);moveTt(e)});
+      c.addEventListener('mouseleave',hideTt);
+    }
+  });
+
+  const el=document.getElementById('c-scatter');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: COUNTRY BARS ──────────────────────────────────────────────────
+function drawCountry(country) {
+  const W=500,H=270,ML=82,MR=18,MT=20,MB=28,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const BH=26,GAP=(PH-CTRY_D.length*BH)/(CTRY_D.length-1);
+  const xS=v=>ML+(v/.5)*PW;
+
+  [0,.1,.2,.3,.4,.5].forEach(v=>{
+    gline(svg,xS(v),MT,xS(v),MT+PH);
+    gtxt(svg,xS(v),MT+PH+14,v.toFixed(1),'#8a9bb0',10);
+  });
+  gline(svg,xS(.37),MT,xS(.37),MT+PH,'rgba(251,191,36,.5)',1,'4 3');
+  gtxt(svg,xS(.37),MT-7,'avg','#fbbf24',9);
+
+  CTRY_D.forEach((d,i)=>{
+    const y=MT+i*(BH+GAP);
+    const w=(d.r/.5)*PW;
+    const isSelected=country!=='All'&&country===d.c;
+    const isGlobal=country==='All'&&d.r===Math.max(...CTRY_D.map(x=>x.r));
+    const fill=isSelected?'#1ed760':isGlobal?'#1db954':'#1a3a2a';
+    const textFill=isSelected?'#1ed760':isGlobal?'#1db954':'#8a9bb0';
+
+    const b=se('rect',{x:ML,y,width:w,height:BH,fill,rx:5},svg);
+    if(isSelected||isGlobal){
+      se('rect',{x:ML,y,width:w,height:BH,fill:'none',stroke:'#1db954','stroke-width':1,rx:5,opacity:.5},svg);
+    }
+    b.style.cursor='crosshair';
+    b.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.c}</strong>r = ${d.r.toFixed(2)}`);moveTt(e)});
+    b.addEventListener('mouseleave',hideTt);
+    gtxt(svg,ML-6,y+BH/2,d.c,'#8a9bb0',12,'end',500);
+    gtxt(svg,ML+w+8,y+BH/2,d.r.toFixed(2),textFill,11,'start',(isSelected||isGlobal)?700:400);
+  });
+
+  const el=document.getElementById('c-country');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: HEATMAP ───────────────────────────────────────────────────────
+function drawHeatmap(country) {
+  const hm=getHeatmap(country);
+  const n=12,m=hm.length;
+  const W=780,H=230,ML=86,MR=16,MT=32,MB=8;
+  const PW=W-ML-MR,PH=H-MT-MB;
+  const CW=PW/n,CH=PH/m;
+  const svg=svgRoot(W,H);
+
+  BASE.forEach((d,i)=>{
+    const x=ML+i*CW+CW/2;
+    gtxt(svg,x,MT-10,d.m.split(' ')[0],'#8a9bb0',9.5);
+    gtxt(svg,x,MT-1,d.m.split(' ')[1],'#4a5568',8);
+  });
+
+  hm.forEach((row,ri)=>{
+    const y=MT+ri*CH;
+    const dimmed=!row.highlight;
+    gtxt(svg,ML-6,y+CH/2,row.country,row.highlight?row.color:'#4a5568',11.5,'end',row.highlight?700:400);
+
+    row.values.forEach((val,ci)=>{
+      const x=ML+ci*CW;
+      const col=heatColor(val);
+      grect(svg,x+1,y+1,CW-2,CH-2,col,4,{opacity:dimmed?0.25:1});
+
+      const cell=se('rect',{x:x+1,y:y+1,width:CW-2,height:CH-2,fill:'transparent',rx:4},svg);
+      cell.style.cursor='crosshair';
+      cell.addEventListener('mousemove',e=>{
+        showTt(e,`<strong>${row.country} — ${BASE[ci].m}</strong>Sentiment: ${val>0?'+':''}${val.toFixed(3)}<br>${val>0?'Positive 📈':'Negative 📉'} news cycle`);
+        moveTt(e);
+      });
+      cell.addEventListener('mouseleave',hideTt);
+
+      if(Math.abs(val)>.1){
+        gtxt(svg,x+CW/2,y+CH/2,val.toFixed(2),val>0?'rgba(29,185,84,.9)':'rgba(252,165,165,.8)',8.5);
+      }
+    });
+  });
+
+  // Legend bar
+  const lx=ML,ly=H-4,lw=PW;
+  const lg=se('linearGradient',{id:'hleg',x1:0,y1:0,x2:1,y2:0},se('defs',{},svg));
+  se('stop',{offset:'0%','stop-color':'rgb(160,28,28)'},lg);
+  se('stop',{offset:'50%','stop-color':'rgb(30,40,55)'},lg);
+  se('stop',{offset:'100%','stop-color':'rgb(29,185,84)'},lg);
+  grect(svg,lx,ly,lw,6,'url(#hleg)',3);
+  gtxt(svg,lx,ly-2,'−0.35','rgba(252,165,165,.8)',8,'start');
+  gtxt(svg,lx+lw/2,ly-2,'0','#8a9bb0',8);
+  gtxt(svg,lx+lw,ly-2,'+0.35','rgba(29,185,84,.8)',8,'end');
+
+  const el=document.getElementById('c-heatmap');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: LAG ──────────────────────────────────────────────────────────
+function drawLag(country) {
+  const lagData=getLag(country);
+  const W=780,H=240,ML=44,MR=14,MT=14,MB=36,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  glowDef(svg,'lglow','#1db954',5);
+  const n=lagData.length,slotW=PW/n,BW=Math.min(38,slotW-8),yMax=.46;
+  const yS=v=>MT+PH-(v/yMax)*PH;
+
+  [0,.1,.2,.3,.4].forEach(v=>{
+    gline(svg,ML,yS(v),ML+PW,yS(v));
+    gtxt(svg,ML-6,yS(v),v.toFixed(1),'#8a9bb0',10,'end');
+  });
+
+  lagData.forEach((d,i)=>{
+    const x=ML+(i+.5)*slotW-BW/2,bh=(d.r/yMax)*PH,y=MT+PH-bh;
+    const fill=d.peak?'#1db954':'#1a3a2a';
+    const b=se('rect',{x,y,width:BW,height:bh,fill,rx:5,filter:d.peak?'url(#lglow)':undefined},svg);
+    if(d.peak){
+      se('rect',{x,y,width:BW,height:bh,fill:'none',stroke:'#1ed760','stroke-width':1.5,rx:5,opacity:.6},svg);
+      gtxt(svg,ML+(i+.5)*slotW,y-10,'peak','#1ed760',9,'middle',700);
+    }
+    b.style.cursor='crosshair';
+    b.addEventListener('mousemove',e=>{showTt(e,`<strong>Lag ${d.h}</strong>Correlation: ${d.r.toFixed(3)}${d.peak?'<br>⭐ Peak response':''}`)});
+    b.addEventListener('mousemove',moveTt);
+    b.addEventListener('mouseleave',hideTt);
+    gtxt(svg,ML+(i+.5)*slotW,MT+PH+14,d.h,'#8a9bb0',i%2===0?10:9);
+  });
+
+  const el=document.getElementById('c-lag');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: ROLLING CORRELATION ────────────────────────────────────────────
+function drawRolling(country) {
+  const allLines = getRolling(country);
+  const W=500,H=270,ML=44,MR=14,MT=22,MB=38,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const defs=se('defs',{},svg);
+
+  const rMin=.05, rMax=.54;
+  const n=BASE.length;
+  const xS=i=>ML+(i/(n-1))*PW;
+  const yS=v=>MT+PH-((v-rMin)/(rMax-rMin))*PH;
+
+  // Grid
+  [.1,.2,.3,.4,.5].forEach(v=>{
+    gline(svg,ML,yS(v),ML+PW,yS(v));
+    gtxt(svg,ML-6,yS(v),v.toFixed(1),'#8a9bb0',10,'end');
+  });
+  BASE.forEach((d,i)=>{
+    if(i%2===0){
+      gline(svg,xS(i),MT+PH,xS(i),MT+PH+4,'rgba(255,255,255,0.15)',1);
+      gtxt(svg,xS(i),MT+PH+16,d.m.split(' ')[0],'#8a9bb0',9.5);
+    }
+  });
+
+  // Avg reference line
+  const avgR = .37;
+  gline(svg,ML,yS(avgR),ML+PW,yS(avgR),'rgba(251,191,36,.35)',1,'4 3');
+  gtxt(svg,ML+PW+4,yS(avgR),'avg','#fbbf24',8.5,'start');
+
+  // Draw faint lines first, highlighted on top
+  const faint = allLines.filter(l=>!l.highlighted);
+  const hi    = allLines.filter(l=>l.highlighted);
+
+  faint.forEach(line=>{
+    const pts = line.rolled.map((v,i)=>[xS(i),yS(v)]);
+    gpath(svg,smoothPath(pts),'none',0,line.color,1.2);
+    gcircle(svg,xS(n-1),yS(line.rolled[n-1]),3,line.color,.25);
+  });
+
+  hi.forEach(line=>{
+    const moodCol = MOOD_COLORS[currentMood] || line.color;
+    const pts = line.rolled.map((v,i)=>[xS(i),yS(v)]);
+    // Glow under highlighted line
+    const gId = 'rg'+line.c.replace(/\s/g,'');
+    glowDef(svg,gId,moodCol,4);
+
+    gpath(svg,smoothPath(pts),'none',0,moodCol,2.8,undefined);
+    // Dots
+    line.rolled.forEach((v,i)=>{
+      const c=gcircle(svg,xS(i),yS(v),4.5,moodCol,.9);
+      c.style.cursor='crosshair';
+      c.addEventListener('mousemove',e=>{
+        showTt(e,`<strong>${line.c} — ${BASE[i].m}</strong>3-mo rolling r: ${v.toFixed(3)}<br>Mood: ${currentMood}`);
+        moveTt(e);
+      });
+      c.addEventListener('mouseleave',hideTt);
+    });
+    // End label
+    gtxt(svg,xS(n-1)+14,yS(line.rolled[n-1]),line.c,moodCol,10,'start',700);
+  });
+
+  // Y axis label
+  gtxt(svg,10,MT+PH/2,'r (correlation)','#8a9bb0',10,'middle');
+
+  const el=document.getElementById('c-rolling');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: AUDIO FEATURE PROFILE ─────────────────────────────────────────
+function drawAudio(country) {
+  const feats = getAudio(country);
+  const moodCol = MOOD_COLORS[currentMood] || '#1db954';
+  const W=500,H=260,ML=102,MR=48,MT=16,MB=16,PW=W-ML-MR,PH=H-MT-MB;
+  const n=feats.length;
+  const svg=svgRoot(W,H);
+  glowDef(svg,'aglow',moodCol,5);
+
+  const rowH=PH/n;
+  const xS=v=>ML+(v/100)*PW;
+
+  // Grid lines
+  [0,25,50,75,100].forEach(v=>{
+    gline(svg,xS(v),MT,xS(v),MT+PH);
+    if(v>0) gtxt(svg,xS(v),MT+PH+14,v+'%','#8a9bb0',9.5);
+  });
+
+  feats.forEach((d,i)=>{
+    const y=MT+i*rowH+rowH*.18;
+    const bh=rowH*.64;
+    const w=xS(d.val)-ML;
+    const isHigh=d.val>=65;
+
+    // Background track
+    grect(svg,ML,y,PW,bh,'rgba(255,255,255,.04)',5);
+    // Bar
+    const fillId=`af${i}`;
+    const defs=svg.querySelector('defs')||se('defs',{},svg);
+    const grad=se('linearGradient',{id:fillId,x1:0,y1:0,x2:1,y2:0},defs);
+    se('stop',{offset:'0%','stop-color':moodCol,'stop-opacity':.55},grad);
+    se('stop',{offset:'100%','stop-color':moodCol,'stop-opacity':isHigh?.95:.7},grad);
+
+    const bar=se('rect',{x:ML,y,width:Math.max(4,w),height:bh,fill:`url(#${fillId})`,rx:5,
+      filter:isHigh?'url(#aglow)':undefined},svg);
+    // Value label
+    gtxt(svg,ML+w+6,y+bh/2,d.val+'%',moodCol,11,'start',isHigh?700:500);
+    // Feature label
+    gtxt(svg,ML-6,y+bh/2,d.f,'#8a9bb0',11.5,'end',500);
+
+    // Tooltip
+    bar.style.cursor='crosshair';
+    bar.addEventListener('mousemove',e=>{
+      showTt(e,`<strong>${d.f}</strong>Score: ${d.val}%<br>Country: ${country}<br>Mood: ${currentMood}`);
+      moveTt(e);
+    });
+    bar.addEventListener('mouseleave',hideTt);
+  });
+
+  const el=document.getElementById('c-audio');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: RADAR ─────────────────────────────────────────────────────────
+function drawRadar(country) {
+  const rd=getRadar(country);
+  const W=500,H=290,cx=245,cy=148,R=95;
+  const svg=svgRoot(W,H);
+  const n=rd.length,ang=i=>(i/n)*2*Math.PI-Math.PI/2;
+  const px=(i,r)=>+(cx+r*Math.cos(ang(i))).toFixed(1);
+  const py=(i,r)=>+(cy+r*Math.sin(ang(i))).toFixed(1);
+
+  [.25,.5,.75,1].forEach(f=>{
+    const r=R*f;
+    gpoly(svg,rd.map((_,i)=>[px(i,r),py(i,r)]),'none',0,'rgba(255,255,255,0.07)',1);
+  });
+  rd.forEach((_,i)=>gline(svg,cx,cy,px(i,R),py(i,R),'rgba(255,255,255,0.07)',1));
+  rd.forEach((d,i)=>{
+    const lx=px(i,R+20),ly=py(i,R+20);
+    gtxt(svg,lx,ly,d.sub,'#8a9bb0',11.5,'middle',500);
+  });
+
+  gpoly(svg,rd.map((d,i)=>[px(i,R*d.pos/100),py(i,R*d.pos/100)]),'#1db954',.22,'#1db954',2);
+  gpoly(svg,rd.map((d,i)=>[px(i,R*d.neg/100),py(i,R*d.neg/100)]),'#e91e8c',.15,'#e91e8c',2);
+
+  rd.forEach((d,i)=>{
+    const c=gcircle(svg,px(i,R*d.pos/100),py(i,R*d.pos/100),4.5,'#1db954');
+    c.style.cursor='crosshair';
+    c.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.sub}</strong>Positive: ${d.pos}%<br>Negative: ${d.neg}%<br>Mood: ${currentMood}`);moveTt(e)});
+    c.addEventListener('mouseleave',hideTt);
+    const c2=gcircle(svg,px(i,R*d.neg/100),py(i,R*d.neg/100),4.5,'#e91e8c');
+    c2.style.cursor='crosshair';
+    c2.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.sub}</strong>Negative: ${d.neg}%<br>Mood: ${currentMood}`);moveTt(e)});
+    c2.addEventListener('mouseleave',hideTt);
+  });
+
+  const el=document.getElementById('c-radar');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: EMOTION BARS ──────────────────────────────────────────────────
+function drawEmotion(country) {
+  const em=getEmotion(country);
+  const W=500,H=265,ML=40,MR=14,MT=14,MB=38,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  const n=em.length,gW=PW/n,BW=gW*.34,GAP=gW*.06,yMax=90;
+  const yS=v=>MT+PH-(v/yMax)*PH;
+
+  [0,25,50,75].forEach(v=>{
+    gline(svg,ML,yS(v),ML+PW,yS(v));
+    gtxt(svg,ML-6,yS(v),v+'%','#8a9bb0',10,'end');
+  });
+
+  em.forEach((d,i)=>{
+    const gx=ML+i*gW+gW/2,xP=gx-GAP/2-BW,xN=gx+GAP/2;
+    const bhP=(d.p/yMax)*PH,bhN=(d.n/yMax)*PH;
+    const bP=se('rect',{x:xP,y:yS(d.p),width:BW,height:bhP,fill:'#1db954',opacity:.82,rx:4},svg);
+    const bN=se('rect',{x:xN,y:yS(d.n),width:BW,height:bhN,fill:'#e91e8c',opacity:.76,rx:4},svg);
+    [[bP,d.p,'Positive'],[bN,d.n,'Negative']].forEach(([b,val,lbl])=>{
+      b.style.cursor='crosshair';
+      b.addEventListener('mousemove',e=>{showTt(e,`<strong>${d.a}</strong>${lbl}: ${val}%<br>Mood: ${currentMood}`);moveTt(e)});
+      b.addEventListener('mouseleave',hideTt);
+    });
+    gtxt(svg,gx,MT+PH+16,d.a,'#8a9bb0',10.5,'middle',500);
+  });
+
+  const el=document.getElementById('c-emotion');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── CHART: BUBBLE ────────────────────────────────────────────────────────
+function drawBubble(country) {
+  const bubs=getBubble(country);
+  const W=780,H=290,ML=64,MR=24,MT=30,MB=40,PW=W-ML-MR,PH=H-MT-MB;
+  const svg=svgRoot(W,H);
+  glowDef(svg,'bglow','#1db954',6);
+
+  const xMin=-.12,xMax=.12,yMin=.24,yMax=.48;
+  const xS=v=>ML+((v-xMin)/(xMax-xMin))*PW;
+  const yS=v=>MT+PH-((v-yMin)/(yMax-yMin))*PH;
+  const rS=sz=>14+(sz-24)/22*14;
+
+  [-.1,-.05,0,.05,.1].forEach(v=>{
+    gline(svg,xS(v),MT,xS(v),MT+PH);
+    gtxt(svg,xS(v),MT+PH+14,v.toFixed(2),'#8a9bb0',10);
+  });
+  [.28,.32,.36,.40,.44,.48].forEach(v=>{
+    gline(svg,ML,yS(v),ML+PW,yS(v));
+    gtxt(svg,ML-8,yS(v),v.toFixed(2),'#8a9bb0',10,'end');
+  });
+  gline(svg,xS(0),MT,xS(0),MT+PH,'rgba(255,255,255,0.14)',1,'4 3');
+  gline(svg,ML,yS(.37),ML+PW,yS(.37),'rgba(251,191,36,.35)',1,'4 3');
+  gtxt(svg,ML+PW+4,yS(.37),'avg','#fbbf24',9,'start');
+  gtxt(svg,ML+PW/2,MT+PH+30,'Avg News Sentiment','#8a9bb0',10);
+  gtxt(svg,10,MT+PH/2,'Sentiment-Valence Correlation (r)','#8a9bb0',10);
+
+  bubs.forEach(d=>{
+    const cx=xS(d.as),cy=yS(d.r),r=rS(d.sz);
+    const col=CTRY_COLORS[CTRY_NAMES.indexOf(d.c)];
+    const dim=!d.selected;
+    gcircle(svg,cx,cy,r+3,col,.15);
+    const circ=gcircle(svg,cx,cy,r,col,dim?.18:.65,dim?{}:{filter:'url(#bglow)'});
+    if(!dim){
+      gtxt(svg,cx,cy,d.c,'#fff',10.5,'middle',700);
+      gtxt(svg,cx,cy+13,`r=${d.r}`,'rgba(255,255,255,.7)',8.5,'middle',400);
+    }
+    circ.style.cursor='crosshair';
+    circ.addEventListener('mousemove',e=>{
+      showTt(e,`<strong>${d.c}</strong>Correlation: ${d.r.toFixed(2)}<br>Avg sentiment: ${d.as>0?'+':''}${d.as.toFixed(3)}<br>Stream volume: ${d.sz} (index)`);
+      moveTt(e);
+    });
+    circ.addEventListener('mouseleave',hideTt);
+  });
+
+  const el=document.getElementById('c-bubble');
+  el.innerHTML='';el.appendChild(svg);
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────
+function showTab(name,btn) {
+  ['overview','sentiment'].forEach(p=>{
+    document.getElementById('pane-'+p).style.display='none';
+  });
+  document.getElementById('pane-'+name).style.display='block';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── REDRAW ALL ────────────────────────────────────────────────────────────
+function redrawAll() {
+  const country=document.getElementById('csel').value;
+  const data=getData(country);
+  drawTimeline(data);
+  drawVolume(data);
+  drawScatter(country);
+  drawCountry(country);
+  drawHeatmap(country);
+  drawLag(country);
+  drawRolling(country);
+  drawAudio(country);
+  drawRadar(country);
+  drawEmotion(country);
+  drawBubble(country);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', redrawAll);
+</script>
+</body>
+</html>
