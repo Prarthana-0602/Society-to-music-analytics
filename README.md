@@ -1,116 +1,56 @@
-# 🎵 Society-to-Music Analytics  
-### Exploring the Relationship Between Global News Sentiment and Consumer Music Listening Behavior
+# Society to Music Analytics  
+### From Global News Sentiment to Music Listening Behavior
 
-## 📌 Project Overview
+This project explores whether global news sentiment is connected to how people listen to music across countries and time.
 
-This UCLA Anderson MSBA analytics project explored whether shifts in global news sentiment influence music listening behavior across countries and over time.
+As part of a collaborative analytics project, we built an end-to-end data pipeline using Spotify streaming data, Spotify audio features, and GDELT global news sentiment data. The goal was to understand whether large world events and changes in public sentiment could be reflected in music mood, listening behavior, and emotional audio patterns.
 
-As part of a six-member analytics team, we built a large-scale multi-source analytical workflow integrating global news sentiment datasets with Spotify listening behavior data across multiple countries over a four-year period. The goal was to identify measurable behavioral and emotional response patterns linked to external world events and sentiment changes.
+---
 
-The project combined elements of:
-- consumer behavior analytics,
-- statistical analysis,
-- ETL/data engineering workflows,
-- time-series trend analysis,
-- and visualization-driven storytelling.
+## Core Question
 
-## 🧠 Core Analytical Question
+Can global news sentiment help explain shifts in music listening behavior?
 
-> *Can changes in global sentiment and major world events measurably influence the type of music people listen to?*
+More specifically, we wanted to understand whether changes in news tone were associated with changes in music features such as valence, energy, joy, sadness, fear, and anger.
 
-We explored whether external emotional and societal shifts were reflected in:
-- listener mood patterns,
-- emotional audio features,
-- and behavioral listening changes across regions and time periods.
+---
 
-# 👩🏻‍💻 My Contributions
+## Data Sources
 
-This project was completed as part of a six-member UCLA Anderson MSBA team. My work primarily focused on data integration, analytical workflows, statistical analysis, and insight generation across the sentiment and music datasets.
+| Dataset | Purpose |
+|---|---|
+| Spotify Charts | Country-level music streaming behavior |
+| Spotify Audio Features | Song-level mood and audio indicators |
+| GDELT News Sentiment | Global news tone and emotion signals |
 
-### Multi-Source Data Integration
-- Worked on integrating Spotify listening datasets with global news sentiment data collected across multiple countries and time periods.
-- Helped align datasets based on date, country, and temporal granularity to support downstream analysis and visualization.
-- Assisted in handling inconsistencies across source files, including missing values, schema mismatches, formatting differences, and duplicate records.
+---
 
-### Data Cleaning & Workflow Development
-- Contributed to ETL and preprocessing workflows using Python and SQL to improve data consistency and analytical reliability.
-- Supported validation and transformation workflows to ensure datasets were analysis-ready before modeling and visualization stages.
-- Participated in organizing structured workflows and GitHub-based collaboration for code integration and version management.
+## Tech Stack
 
-### Statistical & Behavioral Analysis
-- Conducted statistical and correlation analysis to evaluate the relationship between external sentiment indicators and music listening behavior trends.
-- Worked on lag-based analysis to understand how quickly listener behavior changed following major global sentiment shifts and news events.
-- Analyzed behavioral listening trends across countries to identify differences in response patterns over time.
+| Area | Tools |
+|---|---|
+| Programming | Python, SQL |
+| Big Data | PySpark |
+| Pipeline Orchestration | Kedro |
+| Cloud | Google Cloud Platform, Dataproc, Google Cloud Storage |
+| Warehouse | Snowflake |
+| Local Analytics | DuckDB |
+| Dashboard | React, FastAPI |
+| Collaboration | GitHub |
 
-### Music Feature & Consumer Behavior Analysis
-- Helped engineer and analyze emotional and behavioral music features including:
-  - valence,
-  - energy,
-  - joy,
-  - anger,
-  - and mood-related listening indicators.
-- Explored how emotional audio characteristics shifted during periods of positive and negative sentiment environments.
+---
 
-### Visualization & Insight Generation
-- Supported the development of dashboard outputs and visualization-driven insights including:
-  - time-series trends,
-  - correlation visualizations,
-  - lag analysis,
-  - and country-level comparisons.
-- Helped translate analytical findings into clear insights that could explain consumer listening behavior patterns in response to external sentiment changes.
+## Pipeline Overview
 
-### Tools & Technologies Used
-Python, SQL, Statistical Analysis, ETL Workflows, Data Cleaning, Time-Series Analysis, GitHub, Multi-Source Data Integration, Consumer Behavior Analytics, Data Visualization
-
-# 🛠️ Technical Stack
-
-### Programming & Analytics
-- Python
-- SQL
-- Statistical Analysis
-- Time-Series Analysis
-- Correlation Analysis
-
-### Data Engineering & Workflow
-- ETL Pipelines
-- Data Cleaning & Validation
-- Multi-Source Data Integration
-- GitHub Collaboration Workflow
-
-### Visualization & Insights
-- Interactive Dashboards
-- Behavioral Analytics
-- Consumer Trend Analysis
-- Visualization-Driven Reporting
-
-# 📊 Key Findings
-
-### 🔹 Behavioral Response Patterns
-Identified measurable listener response behavior within approximately **24 hours** following major sentiment shifts and global events.
-
-### 🔹 Statistically Significant Relationship
-Observed a statistically significant relationship between global news sentiment and music listening behavior:
-
-- Correlation: ~0.37  
-- p-value: < 0.001
-
-### 🔹 Emotional Listening Trends
-Analysis showed meaningful shifts in emotional audio features and listening behavior patterns across different regions and sentiment environments.
-
-# 🌍 Project Impact
-
-This project strengthened experience in:
-- large-scale analytical workflows,
-- behavioral analytics,
-- statistical modeling,
-- collaborative analytics engineering,
-- and translating complex datasets into actionable insights.
-
-The work also reinforced the importance of:
-- reproducible data workflows,
-- cross-functional collaboration,
-- and combining technical analysis with business storytelling.
-
-# 📎 Repository Purpose
-
-This repository serves as a portfolio and contribution overview of project work completed at UCLA.
+```text
+Spotify + GDELT Data
+        ↓
+Data Cleaning + Standardization
+        ↓
+Country-Date Level Aggregation
+        ↓
+Feature Engineering
+        ↓
+Statistical Analysis
+        ↓
+Dashboard + Insights
