@@ -185,6 +185,8 @@ Or manually:
 ```bash
 gcloud workflows run run-pipeline
 ```
+# 🎵 Dashboard
+[View Live Dashboard](https://prarthana-0602.github.io/Society-to-music-analytics/)
 
 # 📌 Highlights
 
